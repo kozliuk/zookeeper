@@ -1,0 +1,20 @@
+version: "3.2"
+services:
+  zookeeper:
+    platform: linux/amd64
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2182:2181"
+    volumes:
+      - ./ops:/opt/zookeeper-3.4.13/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ZOOKEEPER_HOSTS: zookeeper:2181
+    command: python .
+    volumes:
+      - ./app:/app
+    depends_on:
+      - zookeeper
